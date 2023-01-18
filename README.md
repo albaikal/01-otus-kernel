@@ -2,7 +2,7 @@
 
 # 1. Создадим файл конфигурации виртуальной машины 
 
-`aleksey@ub20-OTUS-EDU:~/edu/01-otus-kernel$ vim Vagrantfile
+```aleksey@ub20-OTUS-EDU:~/edu/01-otus-kernel$ vim Vagrantfile
 # Описываем Виртуальные машины
 MACHINES = {
   # Указываем имя ВМ "kernel update"
@@ -36,4 +36,4 @@ Vagrant.configure("2") do |config|
     end
   end
 end
-`
+```
