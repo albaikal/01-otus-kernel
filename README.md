@@ -2,7 +2,10 @@
 
 # 1. Создадим файл конфигурации виртуальной машины 
 
-```aleksey@ub20-OTUS-EDU:~/edu/01-otus-kernel$ vim Vagrantfile
+```bash
+aleksey@ub20-OTUS-EDU:~/edu/01-otus-kernel$ vim Vagrantfile
+```
+```ruby
 # Описываем Виртуальные машины
 MACHINES = {
   # Указываем имя ВМ "kernel update"
