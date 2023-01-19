@@ -186,29 +186,23 @@ Last login: Wed Jan 18 08:33:01 2023 from 10.0.2.2
 [vagrant@kernel-update ~]$ sudo yum -y install ncurses-devel bc openssl-devel elfutils-libelf-devel make gcc flex bison perl
 ```
 
-### 4.2 Скачаем и распакуем [LongTerm ядро версии 5.15.86](https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.86.tar.xz) с [сайта ](https://www.kernel.org/)
+### 4.2 Скачаем и распакуем [LongTerm ядро версии 5.15.86](https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.86.tar.xz) с сайта [www.kernel.org](https://www.kernel.org/).
 
+  Заходим в прдназначенный для исходников ядра каталог.
+```sh
 [vagrant@kernel-update ~]$ cd /usr/src/kernels/
 [vagrant@kernel-update kernels]$ ls -la
 total 0
 drwxr-xr-x. 2 root root  6 May 18  2020 .
 drwxr-xr-x. 4 root root 34 Feb 10  2021 ..
+```
+  Скачиваем и распаковываем архив, заходим в каталог требуемой версииё
+```sh
 [vagrant@kernel-update kernels]$ sudo curl -o linux-5.15.86.tar.xz https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.86.tar.xz
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  120M  100  120M    0     0  1197k      0  0:01:43  0:01:43 --:--:-- 1330k
 [vagrant@kernel-update kernels]$ sudo tar xf linux-5.15.86.tar.xz
-[vagrant@kernel-update kernels]$ ls -la
-total 123536
-drwxr-xr-x. 2 root root        34 Jan 18 09:08 .
-drwxr-xr-x. 4 root root        34 Feb 10  2021 ..
--rw-r--r--. 1 root root 126498884 Jan 18 09:10 linux-5.15.86.tar.xz
-
-
-
-
-
-
-
-
-
+[vagrant@kernel-update kernels]$ cd linux-5.15.86/
+[vagrant@kernel-update linux-5.15.86]$
+```
