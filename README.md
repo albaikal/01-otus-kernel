@@ -188,7 +188,7 @@ Last login: Wed Jan 18 08:33:01 2023 from 10.0.2.2
 
 ### 4.2 Скачаем и распакуем [LongTerm ядро версии 5.15.86](https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.86.tar.xz) с сайта [www.kernel.org](https://www.kernel.org/).
 
-  Заходим в прдназначенный для исходников ядра каталог.
+  Заходим в предназначенный для исходников ядра каталог.
 ```sh
 [vagrant@kernel-update ~]$ cd /usr/src/kernels/
 [vagrant@kernel-update kernels]$ ls -la
@@ -196,7 +196,7 @@ total 0
 drwxr-xr-x. 2 root root  6 May 18  2020 .
 drwxr-xr-x. 4 root root 34 Feb 10  2021 ..
 ```
-  Скачиваем и распаковываем архив, заходим в каталог требуемой версииё
+  Скачиваем и распаковываем архив, заходим в каталог требуемой версии.
 ```sh
 [vagrant@kernel-update kernels]$ sudo curl -o linux-5.15.86.tar.xz https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.86.tar.xz
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -204,5 +204,84 @@ drwxr-xr-x. 4 root root 34 Feb 10  2021 ..
 100  120M  100  120M    0     0  1197k      0  0:01:43  0:01:43 --:--:-- 1330k
 [vagrant@kernel-update kernels]$ sudo tar xf linux-5.15.86.tar.xz
 [vagrant@kernel-update kernels]$ cd linux-5.15.86/
-[vagrant@kernel-update linux-5.15.86]$
 ```
+
+  Копируем файл конфигурации текущего ядра в и запускаем конфигуратор сборки.
+
+```sh
+[vagrant@kernel-update linux-5.15.86]$ cp /boot/config-6.1.6-1.el8.elrepo.x86_64 .config
+[vagrant@kernel-update linux-5.15.86]$ sudo make olddefconfig
+[vagrant@kernel-update linux-5.15.86]$ sudo make olddefconfig
+.config:5449:warning: symbol value 'm' invalid for DRM_GEM_SHMEM_HELPER
+.config:6064:warning: symbol value 'm' invalid for SND_SOC_SOF_DEBUG_PROBES
+.config:6105:warning: symbol value 'm' invalid for SND_SOC_SOF_HDA_PROBES
+#
+# configuration written to .config
+#
+```
+
+  Собираем ядро, устанавливаем модули, устанавливаем ядро. Проверяем загрузчик. Перегружаемся.
+
+```sh
+[vagrant@kernel-update linux-5.15.86]$ sudo make -j 2
+  SYNC    include/config/auto.conf.cmd
+  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_32.h
+  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_64.h
+  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_x32.h
+  SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
+...
+  LD [M]  sound/x86/snd-hdmi-lpe-audio.ko
+  LD [M]  sound/xen/snd_xen_front.ko
+  LD [M]  virt/lib/irqbypass.ko
+
+[vagrant@kernel-update linux-5.15.86]$ sudo make modules_install
+  INSTALL /lib/modules/5.15.86/kernel/arch/x86/crypto/aegis128-aesni.ko
+  SIGN    /lib/modules/5.15.86/kernel/arch/x86/crypto/aegis128-aesni.ko
+  INSTALL /lib/modules/5.15.86/kernel/arch/x86/crypto/blowfish-x86_64.ko
+...
+  SIGN    /lib/modules/5.15.86/kernel/sound/x86/snd-hdmi-lpe-audio.ko
+  INSTALL /lib/modules/5.15.86/kernel/sound/xen/snd_xen_front.ko
+  SIGN    /lib/modules/5.15.86/kernel/sound/xen/snd_xen_front.ko
+  INSTALL /lib/modules/5.15.86/kernel/virt/lib/irqbypass.ko
+  SIGN    /lib/modules/5.15.86/kernel/virt/lib/irqbypass.ko
+  DEPMOD  /lib/modules/5.15.86
+
+[vagrant@kernel-update linux-5.15.86]$ sudo make install
+sh ./arch/x86/boot/install.sh 5.15.86 \
+	arch/x86/boot/bzImage System.map "/boot"
+
+[vagrant@kernel-update linux-5.15.86]$ sudo grubby --info=ALL
+index=0
+kernel="/boot/vmlinuz-6.1.6-1.el8.elrepo.x86_64"
+args="ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop $tuned_params"
+root="UUID=ea09066e-02dd-46ad-bac9-700172bc3bca"
+initrd="/boot/initramfs-6.1.6-1.el8.elrepo.x86_64.img $tuned_initrd"
+title="Enterprise Linux (6.1.6-1.el8.elrepo.x86_64) 8.7"
+id="4b648c14661340e6a0b1d4efa9a4aee7-6.1.6-1.el8.elrepo.x86_64"
+index=1
+kernel="/boot/vmlinuz-5.15.86"
+args="ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop"
+root="UUID=ea09066e-02dd-46ad-bac9-700172bc3bca"
+initrd="/boot/initramfs-5.15.86.img"
+title="CentOS Stream (5.15.86) 8"
+id="4b648c14661340e6a0b1d4efa9a4aee7-5.15.86"
+index=2
+kernel="/boot/vmlinuz-4.18.0-277.el8.x86_64"
+args="ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop $tuned_params"
+root="UUID=ea09066e-02dd-46ad-bac9-700172bc3bca"
+initrd="/boot/initramfs-4.18.0-277.el8.x86_64.img $tuned_initrd"
+title="CentOS Stream (4.18.0-277.el8.x86_64) 8"
+id="ee0aa2a41ed04a14ad5aac77ad6b5e06-4.18.0-277.el8.x86_64"
+[vagrant@kernel-update linux-5.15.86]$ sudo grubby --default-index
+1
+[vagrant@kernel-update linux-5.15.86]$ sudo init 6
+Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+aleksey@Ubo20-OTUS-EDU:~/edu/01-otus-kernel$ vagrant ssh
+Last login: Fri Jan 20 03:03:16 2023 from 10.0.2.2
+[vagrant@kernel-update ~]$ uname -r
+5.15.86
+[vagrant@kernel-update ~]$
+```
+
+## Установка ядер из репозитория и исходников выполнена.
