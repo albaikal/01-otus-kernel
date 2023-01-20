@@ -205,6 +205,7 @@ drwxr-xr-x. 4 root root 34 Feb 10  2021 ..
 [vagrant@kernel-update kernels]$ sudo tar xf linux-5.15.86.tar.xz
 [vagrant@kernel-update kernels]$ cd linux-5.15.86/
 ```
+### 4.3 Собираем и инсталлируем ядро.
 
   Копируем файл конфигурации текущего ядра в и запускаем конфигуратор сборки.
 
