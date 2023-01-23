@@ -1,0 +1,78 @@
+{
+  "variables": {
+    "artifact_description": "CentOS 8.6 with kernel lt-5.15.86, ml-6.1.6",
+    "artifact_version": "7.7.1908",
+    "image_name": "centos-7.7"
+  },
+
+  "builders": [
+    {
+      "name": "{{user `image_name`}}",
+      "type": "virtualbox-iso",
+      "vm_name": "01-otus-kernel_packer_kernel-update",
+
+      "boot_wait": "10s",
+      "disk_size": "10240",
+      "guest_os_type": "RedHat_64",
+      "http_directory": "http",
+
+      "iso_url": "http://mirror.yandex.ru/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20230119-boot.iso",
+      "iso_checksum": "a3b9337647b43a600f6ae1f1cff44d750313f2357b7ac41337a594d3720584b2",
+
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.ks<enter><wait>"
+      ],
+
+      "shutdown_command": "sudo -S /sbin/halt -h -p",
+      "shutdown_timeout" : "5m",
+
+      "ssh_wait_timeout": "20m",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_pty": true,
+
+      "output_directory": "builds",
+
+      "vboxmanage": [
+        [  "modifyvm",  "{{.Name}}",  "--memory",  "1024" ],
+        [  "modifyvm",  "{{.Name}}",  "--cpus",  "2" ]
+      ],
+
+      "export_opts":
+      [
+        "--manifest",
+        "--vsys", "0",
+        "--description", "{{user `artifact_description`}}",
+        "--version", "{{user `artifact_version`}}"
+      ]
+
+    }
+  ],
+
+  "post-processors": [
+    {
+      "output": "centos-{{user `artifact_version`}}-kernel-5-x86_64-Minimal.box",
+      "compression_level": "7",
+      "type": "vagrant"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "start_retry_timeout": "1m",
+      "expect_disconnect": true,
+      "pause_before": "20s",
+      "override": {
+        "{{user `image_name`}}" : {
+          "scripts" :
+            [
+              "scripts/stage-1-kernel-update.sh",
+              "scripts/stage-2-clean.sh"
+            ]
+        }
+      }
+    }
+  ]
+}
