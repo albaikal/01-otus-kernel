@@ -1,8 +1,8 @@
 {
   "variables": {
-    "artifact_description": "CentOS 8.6 with kernel lt-5.15.86, ml-6.1.6",
-    "artifact_version": "7.7.1908",
-    "image_name": "centos-7.7"
+    "artifact_description": "CentOS-Streams 8.6 with kernel lt-5.15, ml-6.1",
+    "artifact_version": "20230125",
+    "image_name": "centos-8.6-min-albaikal"
   },
 
   "builders": [
@@ -16,17 +16,17 @@
       "guest_os_type": "RedHat_64",
       "http_directory": "http",
 
-      "iso_url": "http://mirror.yandex.ru/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20230119-boot.iso",
-      "iso_checksum": "a3b9337647b43a600f6ae1f1cff44d750313f2357b7ac41337a594d3720584b2",
+      "iso_url": "http://mirror.yandex.ru/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20230119-dvd1.iso",
+      "iso_checksum": "ac7e7243994a17009cdda5430c4876ebcac00a987cd878e4073f5bb572db9929",
 
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.ks<enter><wait>"
+	"<up><wait><tab><wait> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.ks<enter><wait5>"
       ],
 
       "shutdown_command": "sudo -S /sbin/halt -h -p",
       "shutdown_timeout" : "5m",
 
-      "ssh_wait_timeout": "20m",
+      "ssh_wait_timeout": "300m",
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
       "ssh_port": 22,
@@ -36,7 +36,9 @@
 
       "vboxmanage": [
         [  "modifyvm",  "{{.Name}}",  "--memory",  "1024" ],
-        [  "modifyvm",  "{{.Name}}",  "--cpus",  "2" ]
+        [  "modifyvm",  "{{.Name}}",  "--cpus",  "2" ],
+        [  "modifyvm",  "{{.Name}}",  "--graphicscontroller", "vmsvga" ],
+        [  "modifyvm",  "{{.Name}}",  "--vram", "18" ]
       ],
 
       "export_opts":
@@ -61,7 +63,7 @@
     {
       "type": "shell",
       "execute_command": "{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "start_retry_timeout": "1m",
+      "start_retry_timeout": "10m",
       "expect_disconnect": true,
       "pause_before": "20s",
       "override": {

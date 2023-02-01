@@ -1,6 +1,3 @@
-install
-cdrom
-
 lang en_US.UTF-8
 keyboard us
 timezone UTC
@@ -8,15 +5,15 @@ timezone UTC
 network --onboot yes --bootproto=dhcp --device=eth0 --activate --noipv6
 
 rootpw vagrant
-authconfig --enableshadow --passalgo=sha512
-user --name=vagrant --groups=vagrant --password=vagrant
+
+user --name=vagrant --groups=wheel --password=vagrant
 
 firewall --disabled
 selinux --disabled
 firstboot --disabled
 
 # Old cool eth0/eth1/... -> "net.ifnames=0 biosdevname=0"
-bootloader --location=mbr --append="ipv6.disable=1 net.ifnames=0 biosdevname=0"
+bootloader --location=mbr --append="net.ifnames=0 biosdevname=0"
 text
 skipx
 
@@ -27,10 +24,8 @@ autopart
 
 reboot
 
-%packages --nobase
-@Core
-openssh-clients
-openssh-server
+%packages --ignoremissing
+@^Minimal Install
 %end
 
 %post --log=/root/post_install.log
