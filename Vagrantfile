@@ -3,9 +3,9 @@ MACHINES = {
   # Указываем имя ВМ "kernel update"
   :"kernel-update" => {
     #Какой vm box будем использовать
-    :box_name => "centos/stream8",
+    :box_name => "albaikal/C8-custom-kernel",
     #Указываем box_version
-    :box_version => "20210210.0",
+    :box_version => "1.0",
     #Указываем количество ядер ВМ
     :cpus => 2,
     #Указываем количество ОЗУ в мегабайтах
