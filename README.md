@@ -212,7 +212,6 @@ drwxr-xr-x. 4 root root 34 Feb 10  2021 ..
 ```sh
 [vagrant@kernel-update linux-5.15.86]$ sudo cp /boot/config-6.1.6-1.el8.elrepo.x86_64 .config
 [vagrant@kernel-update linux-5.15.86]$ sudo make olddefconfig
-[vagrant@kernel-update linux-5.15.86]$ sudo make olddefconfig
 .config:5449:warning: symbol value 'm' invalid for DRM_GEM_SHMEM_HELPER
 .config:6064:warning: symbol value 'm' invalid for SND_SOC_SOF_DEBUG_PROBES
 .config:6105:warning: symbol value 'm' invalid for SND_SOC_SOF_HDA_PROBES
