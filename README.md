@@ -210,7 +210,7 @@ drwxr-xr-x. 4 root root 34 Feb 10  2021 ..
   Копируем файл конфигурации текущего ядра в и запускаем конфигуратор сборки.
 
 ```sh
-[vagrant@kernel-update linux-5.15.86]$ cp /boot/config-6.1.6-1.el8.elrepo.x86_64 .config
+[vagrant@kernel-update linux-5.15.86]$ sudo cp /boot/config-6.1.6-1.el8.elrepo.x86_64 .config
 [vagrant@kernel-update linux-5.15.86]$ sudo make olddefconfig
 [vagrant@kernel-update linux-5.15.86]$ sudo make olddefconfig
 .config:5449:warning: symbol value 'm' invalid for DRM_GEM_SHMEM_HELPER
